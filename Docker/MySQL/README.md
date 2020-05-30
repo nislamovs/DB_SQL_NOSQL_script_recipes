@@ -1,1 +1,5 @@
-some text here...
+# MySQL
+
+To install MySQL client:
+
+`sudo apt-get install mysql-client`
