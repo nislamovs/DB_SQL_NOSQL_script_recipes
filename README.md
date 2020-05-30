@@ -1,2 +1,2 @@
-# SQL_script_recipes
-SQL scripts for different databases.
+# DB_SQL_NOSQL_script_recipes
+Sql/NoSql scripts for different databases.
