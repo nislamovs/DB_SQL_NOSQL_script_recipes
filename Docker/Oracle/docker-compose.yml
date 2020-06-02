@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  oracle:
+    # You need to build this image first, following the instructions at
+    # https://github.com/oracle/docker-images/blob/master/OracleDatabase/SingleInstance/README.md
+    #
+    # *-----------------------------*
+    # To connect to the DB:
+    #   docker-compose exec oracle bash -c 'sleep 1;rlwrap sqlplus sys/$ORACLE_PWD@localhost:1521/ORCLCDB as sysdba'
+    # *-----------------------------*
+#    image: oracle/database:12.2.0.1-ee
+    image: oracle/database:12.2.0.1-e
+    container_name: oracle
+    environment:
+      - ORACLE_PWD=admin
+    ports:
+      - 1521:1521
+    volumes:
+      - $PWD/data/oracle/oradata:/opt/oracle/oradata
+      - $PWD/data/oracle/oradata/recovery_area:/opt/oracle/oradata/recovery_area
+      - $PWD/data/oracle/ora-setup-scripts:/opt/oracle/scripts/setup
+      - $PWD/data/oracle/ora-startup-scripts:/opt/oracle/scripts/startup
+      - $PWD/db-leach:/opt/oracle/product/12.2.0.1/dbhome_1/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
