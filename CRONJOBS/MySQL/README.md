@@ -4,6 +4,8 @@ Display variable value - to enable cron jobs this should be `on`, not `off`;
 
 `select @@global.event_scheduler;`
 
+To enable `event_scheduler` you should login as root.
+
 For demonstration clean `email` field from table `pupils`:
 
 `UPDATE pupils SET email=''` 
