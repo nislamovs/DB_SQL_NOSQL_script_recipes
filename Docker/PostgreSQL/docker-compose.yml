@@ -1,7 +1,12 @@
-version: '3.1'
+version: '3.5'
+
+networks:
+  postgres:
+    driver: bridge
 
 services:
-  db:
+
+  postgres:
     container_name: "postgres"
     image: postgres
     hostname: postgres
@@ -9,11 +14,32 @@ services:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
       - POSTGRES_DB=school
+      - POSTGRES_DATA=/data/postgres
     ports:
       - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/data/postgres
+    networks:
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - ./volumes/pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
 
   adminer:
     image: adminer
     restart: always
     ports:
       - "8081:8080"
+    networks:
+      - postgres
+
