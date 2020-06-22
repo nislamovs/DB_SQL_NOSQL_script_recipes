@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  h2:
+    container_name: "h2"
+#    image: oscarfonts/h2     #newer version
+    image: oscarfonts/h2:1.4.197
+    hostname: h2
+    volumes:
+      - ./volumes/datadir:/opt/h2-data
+    restart: always
+    ports:
+      - "1521:1521"
+      - "81:81"
+    environment:
+      - "H2_OPTIONS=-ifNotExists"
