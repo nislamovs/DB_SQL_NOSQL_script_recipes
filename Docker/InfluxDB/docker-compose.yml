@@ -1,0 +1,90 @@
+version: '3.3'
+
+services:
+
+  telegraf:
+    image: telegraf:1.11-alpine
+    hostname: telegraf
+    container_name: telegraf
+    volumes:
+      - ./volumes/telegraf/config:/etc/telegraf
+      - ./volumes/telegraf/config:/etc/telegraf
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+      - "8125:8125/udp"
+    restart: always
+
+  influxdb:
+    image: influxdb:latest
+    hostname: influxdb
+    container_name: influxdb
+    user: "$UID:$GID"
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./volumes/influxdb:/var/lib/influxdb:rw
+      - ./volumes/influxdb/config:/etc/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER=influx
+      - INFLUXDB_ADMIN_PASSWORD=influx
+    restart: always
+
+  chronograf:
+    image: chronograf:latest
+    container_name: chronograf
+    hostname: chronograf
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./volumes/chronograf:/var/lib/chronograf:rw
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=influx
+      - INFLUXDB_PASSWORD=influx
+      - KAPACITOR_URL=http://kapacitor:9092
+      - KAPACITOR_USERNAME=influx
+      - KAPACITOR_PASSWORD=influx
+    restart: always
+
+  kapacitor:
+    image: kapacitor:latest
+    container_name: kapacitor
+    hostname: kapacitor
+    ports:
+      - "9092:9092"
+    environment:
+      - VIRTUAL_PORT=9092
+      - KAPACITOR_HOSTNAME=kapacitor
+      - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
+    volumes:
+      - ./volumes/kapacitor/config:/etc/kapacitor
+      - ./volumes/kapacitor:/var/lib/kapacitor:rw
+    depends_on:
+      - influxdb
+    restart: always
+
+  # Define a service for using the influx CLI tool.
+  # docker-compose run influxdb-cli
+  influxdb-cli:
+    image: influxdb
+    entrypoint:
+      - influx
+      - -host
+      - influxdb
+    links:
+      - influxdb
+  # Define a service for using the kapacitor CLI tool.
+  # docker-compose run kapacitor-cli
+  kapacitor-cli:
+    image: kapacitor
+    entrypoint: bash
+    environment:
+      KAPACITOR_URL: http://kapacitor:9092
+    links:
+      - kapacitor
