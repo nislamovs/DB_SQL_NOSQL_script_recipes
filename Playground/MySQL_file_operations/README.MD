@@ -1,4 +1,4 @@
-## Here is example how to add RCE(remote code execution) module to MySQL 5.7
+## Here is example how to add file management module to MySQL 5.7
 
 #### Preparation:
 
@@ -9,13 +9,13 @@
   
 #### Build
 
-Run `createSharedLib.sh`; It will generate shared library `rcemodule.so`.
+Run `createSharedLib.sh`; It will generate shared library `filemanager.so`.
 
 #### Prepare MySQL
 
 - Run `docker-compose up`. It will start MySQL server and Adminer(web UI to connect to MySQL).
 
-- Then run script `copySharedLibToContainer.sh`. It will copy our `rcemodule.so` module to mysql plugins folder
+- Then run script `copySharedLibToContainer.sh`. It will copy our `filemanager.so` module to mysql plugins folder
 in out mysql container.
  
 - Then go to `localhost:8081` in Your browser and login to Your MySQL server as root:
@@ -29,11 +29,11 @@ in out mysql container.
 
 - Enter following commands to enable plugin:
 
-        drop FUNCTION RCEModule;
+        drop FUNCTION FileManager;
         
-        CREATE FUNCTION RCEModule
+        CREATE FUNCTION FileManager
            RETURNS STRING
-           SONAME "rcemodule.so";
+           SONAME "filemanager.so";
            
 That's it!
 
@@ -41,12 +41,14 @@ That's it!
 
 - Enter command :
 
-        SELECT RCEModule('echo "Current date is : $(date)" > /var/lib/mysql-files/curDate.txt') as RESULT; 
+        SELECT FileManager('2', '/var/lib/mysql-files/test.txt', 'test message 1234') as RESULT;
 
     in SQL command field.
 
 - Go to `mysql_files` folder in volumes (it is representation of /var/lib/mysql-files - see docker-compose.yml).
-There  You can find Your `test.txt` file.
+There You can find Your `test.txt` file.
+
+- You can find all possible commands in sql script file : `./sql_scripts/scripts.sql`
 
 ---
 
