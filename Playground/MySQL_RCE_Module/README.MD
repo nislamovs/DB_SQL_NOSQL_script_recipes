@@ -54,6 +54,14 @@ If You have warning from MySQL that creating fo file is impossible due to permis
 
 ---
 
+#### Curl usage
+
+In Dockerfile there is few lines to install curl into Mysql docker container.
+
+You can run curl request from sql with following line:
+
+        SELECT RCEModule('curl ss.lv > /var/lib/mysql-files/curl.txt') as RESULT;
+
 #### Additional info:
 
     - https://www.youtube.com/watch?v=wPp7tI8hb4s
