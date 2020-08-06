@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS cinema_booking_system;
+USE cinema_booking_system;
+
+CREATE TABLE IF NOT EXISTS customers (
+
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	first_name VARCHAR(45),
+	last_name VARCHAR(45) NOT NULL,
+	email VARCHAR(45) NOT NULL UNIQUE
+) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
