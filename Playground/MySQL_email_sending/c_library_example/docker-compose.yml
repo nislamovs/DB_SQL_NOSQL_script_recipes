@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "mysql"
+    image: mysql:5.7.22
+    command: --default-authentication-plugin=mysql_native_password --max_allowed_packet=30M
+    hostname: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=school
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"                    # fix docker container date/time
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./volumes/mysql_plugins:/usr/lib/mysql/plugin"
+      - "./volumes/mysql_files:/var/lib/mysql-files"
+      - "./volumes/mysql-dump:/docker-entrypoint-initdb.d:rw"
+    restart: always
+    ports:
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"

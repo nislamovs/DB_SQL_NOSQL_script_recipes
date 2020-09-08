@@ -1,0 +1,1 @@
+https://www.vertabelo.com/blog/everything-you-need-to-know-about-mysql-partitions/
