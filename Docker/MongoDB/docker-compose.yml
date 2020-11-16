@@ -5,11 +5,34 @@ services:
     container_name: "mongodb"
     image: mongo:latest
     hostname: mongodb
-    command: mongod --port 27027
+    command: mongod --port 27017
     volumes:
       - ./volumes/dumps:/backup
     restart: always
     expose:
       - "22"
     ports:
-      - "27027:27027"
+      - "27017:27017"
+
+  mongoclient:
+    image: mongoclient/mongoclient:latest
+    container_name: mongoclient
+    hostname: mongoclient
+    depends_on:
+      - mongodb
+    ports:
+      - 3000:3000
+    tty: true
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/neighbourhoods
+
+  mongo-express:
+    container_name: dc-mongodb-express
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    ports:
+      - 8081:8081
+    restart: always
+    tty: true

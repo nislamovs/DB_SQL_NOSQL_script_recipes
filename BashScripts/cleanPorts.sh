@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sudo kill `sudo lsof -t -i:8081`
+sudo kill `sudo lsof -t -i:27017`
