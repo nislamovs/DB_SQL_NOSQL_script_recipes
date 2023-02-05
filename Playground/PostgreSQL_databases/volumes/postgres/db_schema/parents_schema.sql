@@ -1,0 +1,20 @@
+DROP TABLE IF EXISTS parents;
+CREATE TABLE IF NOT EXISTS parents (
+    id SERIAL PRIMARY KEY NOT NULL,
+	firstname VARCHAR(50),
+	lastname VARCHAR(50),
+	email VARCHAR(50) UNIQUE,
+	birthdate DATE NOT NULL,
+	parentType prntType NOT NULL,
+	parentInfo text,
+	address VARCHAR(50) NOT NULL,
+	phonenumber VARCHAR(20),
+	familyId VARCHAR(50),
+
+
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ 	created_by VARCHAR(50) DEFAULT CURRENT_USER,
+	modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --ON UPDATE CURRENT_TIMESTAMP,
+ 	modified_by VARCHAR(50) DEFAULT CURRENT_USER
+
+)

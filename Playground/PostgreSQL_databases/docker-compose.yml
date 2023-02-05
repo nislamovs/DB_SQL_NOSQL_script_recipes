@@ -1,0 +1,49 @@
+version: '3.5'
+
+networks:
+  postgres:
+    driver: bridge
+
+services:
+
+  postgres:
+    container_name: "postgres"
+#    image: postgres
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    hostname: postgres
+    environment:
+      - POSTGRES_DATA=/docker-entrypoint-initdb.d
+#      - POSTGRES_DATA=/data/postgres
+    env_file:
+      - proj.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/docker-entrypoint-initdb.d
+
+    networks:
+      - postgres
+
+#  pgadmin:
+#    container_name: pgadmin_container
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    volumes:
+#      - ./volumes/pgadmin:/root/.pgadmin
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - postgres
+
