@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  sqlite3:
+    container_name: "sqlite"
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./volume/db/:/root/db/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"

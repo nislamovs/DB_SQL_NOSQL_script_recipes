@@ -8,7 +8,7 @@ services:
 
   postgres:
     container_name: "postgres"
-#    image: postgres
+#    image: postgres:14.1-alpine
     build:
       context: ./
       dockerfile: Dockerfile

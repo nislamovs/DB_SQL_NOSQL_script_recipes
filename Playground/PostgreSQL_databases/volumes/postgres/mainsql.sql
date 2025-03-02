@@ -65,8 +65,8 @@
 -- -- Load events
 
 
--- -- Cron jobs
--- \i /docker-entrypoint-initdb.d/cronjobs/cronjobs.sql;
+-- Cron jobs
+\i /docker-entrypoint-initdb.d/cronjobs/cronjobs.sql;
 
--- -- Extentions
--- \i /docker-entrypoint-initdb.d/extentions/extentions.sql;
+-- Extentions
+\i /docker-entrypoint-initdb.d/extentions/extentions.sql;

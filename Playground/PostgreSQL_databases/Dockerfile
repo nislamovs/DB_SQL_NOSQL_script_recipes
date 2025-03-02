@@ -2,24 +2,28 @@ FROM postgres
 
 COPY requirements.txt ./
 
-RUN apt-get update
-RUN apt -y install python3 pip
-RUN apt-get -y install postgresql-plpython3-15
-RUN apt -y install libcurl4-openssl-dev libssl-dev
+RUN apt update \
+      && apt install -y --no-install-recommends \
+      git \
+      make \
+      build-essential \
+      ca-certificates \
+      libcurl4-openssl-dev \
+      libssl-dev \
+      postgresql-server-dev-15 \
+      postgresql-plpython3-15 \
+      python3 \
+      python3-dev \
+      python3-pip \
+      python3-setuptools \
+      python3-wheel \
+      cmake \
+      && pip3 install --no-cache-dir -r requirements.txt
 
+RUN git clone https://github.com/citusdata/pg_cron.git && cd pg_cron && make && make install
 
-RUN pip install --no-cache-dir --upgrade pip \
-  && pip install --no-cache-dir -r requirements.txt
+RUN touch /usr/lib/tmpfiles.d/postgresql.conf
+RUN echo "shared_preload_libraries = 'pg_cron'" | tee -a /usr/lib/tmpfiles.d/postgresql.conf
 
-#RUN #apt-get update && apt-get -y install git build-essential postgresql-server-dev-11
-
-#RUN git clone https://github.com/citusdata/pg_cron.git
-#RUN cd pg_cron && make && make install
-#
-#RUN cd / && \
-#        rm -rf /pg_cron && \
-#        apt-get remove -y git build-essential postgresql-server-dev-11 && \
-#        apt-get autoremove --purge -y && \
-#        apt-get clean && \
-#        apt-get purge
-
+RUN mkdir -p /docker-entrypoint-initdb.d
+COPY ./initdb-cron.sh /docker-entrypoint-initdb.d/002-setup-cron.sh
